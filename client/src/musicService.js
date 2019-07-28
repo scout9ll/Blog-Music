@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const url = "http://localhost:5000/api/music/";
+const url = "api/music/";
 
 class MusicService {
   static getMusic() {
-    return axios.get(url).then(res =>
+    return axios.get(url, { "Content-Type": "application/json" }).then(res =>
       res.data.map(music => ({
         ...music
       }))
