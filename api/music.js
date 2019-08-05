@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 const multer = require("multer");
 const router = express.Router();
 const mongodb = require("mongodb");
@@ -21,7 +22,7 @@ router.get("/", (req, res) => {
 
 //upload music
 const storage = multer.diskStorage({
-  destination: "./public/musics/",
+  destination: path.resolve(__dirname, "../public/musics/"),
   filename: function(req, file, cb) {
     cb(null, file.originalname);
   }
@@ -43,8 +44,10 @@ router.post("/upload", (req, res) => {
             songUrl: req.file.path.split("public\\")[1],
             songImage: req.body.songImage
           })
-          .then(() => res.status(201).send("thank you for your song"))
-          .catch(err => console.log(err));
+          .then(() => {
+            res.status(201).send("thank you for your song");
+          })
+          .catch(err => res.send(err));
       });
     }
   });

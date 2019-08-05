@@ -101,7 +101,7 @@ export default {
       this.songFile = this.$refs.ulDom.files[0];
     },
     delSong: function(id) {
-      this.loading = true;
+      this.message = "正在删除...";
       return MusicService.delMusic(id).then(() => {
         this.message = "删除成功!";
         this.getSong();
@@ -113,7 +113,7 @@ export default {
       formData.append("musicFile", this.songFile);
       // console.log(formData.get("musicFile"));
       formData.append("songImage", this.songImage);
-      this.loading = false;
+      this.message = "uploding...";
       MusicService.uploadMusic(formData).then(res => {
         this.message = res.data;
         this.loading = false;
