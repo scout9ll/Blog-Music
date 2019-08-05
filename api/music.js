@@ -41,10 +41,11 @@ router.post("/upload", (req, res) => {
         collection
           .insertOne({
             name: req.file.originalname.split(".")[0],
-            songUrl: req.file.path.split("public\\")[1],
+            songUrl: "musics/" + req.file.originalname,
             songImage: req.body.songImage
           })
           .then(() => {
+            console.log(req.file.path.split("public\\"));
             res.status(201).send("thank you for your song");
           })
           .catch(err => res.send(err));
