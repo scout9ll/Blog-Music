@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <music msg="Welcome to Your Vue.js App" />
+    <img alt="Vue logo" :src="imgUrl" />
+    <music msg="Welcome to Your Vue.js App" v-on:postImg="changeImage" />
   </div>
 </template>
 
@@ -10,15 +10,25 @@ import music from "./components/music.vue";
 
 export default {
   name: "app",
+  data() {
+    return {
+      imgUrl: ""
+    };
+  },
   components: {
     music
+  },
+  methods: {
+    changeImage(imgUrl) {
+      this.imgUrl = imgUrl;
+    }
   }
 };
 </script>
 
 <style>
-body{
-  margin:0;
+body {
+  margin: 0;
 }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -31,6 +41,12 @@ body{
   height: 100vh;
 
   background: no-repeat cover center;
-  background-image: url(http://jibaofiles.s3.amazonaws.com/public/f7b7f324-01a4-4890-9479-88940e201cd1/9739f3df-7951-443d-b839-0ffadef781e6.jpg);
+}
+img {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: -9999;
 }
 </style>

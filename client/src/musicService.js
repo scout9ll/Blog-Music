@@ -13,6 +13,11 @@ class MusicService {
   static addMusic(data) {
     return axios.post(url, data, { "Content-Type": "application/json" });
   }
+  static uploadMusic(data) {
+    return axios.post(`${url}upload`, data, {
+      "Content-Type": "multipart/form-data"
+    });
+  }
   static delMusic(id) {
     return axios.delete(`${url}${id}`);
   }
