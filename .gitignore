@@ -1,7 +1,13 @@
-client/node_modules
+# rules /directory  --in this path ;  directory/ -- every directories  ;  direcrtoryOrfile -- file and directory
+
 .DS_Store
-node_modules
 /dist
+
+# frontend files
+/client
+
+#music files
+/public/musics
 
 # local env files
 .env.local
