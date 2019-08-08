@@ -83,18 +83,18 @@ router.post("/upload", async (req, res) => {
   }
 });
 // del music
-router.delete("/:id", (req, res) => {
-   const status = await checkToken(req, res);
+router.delete("/:id", async (req, res) => {
+  const status = await checkToken(req, res);
   if (status.ok) {
-  myDb.state.test1
-    .collection("music")
-    .deleteOne({
-      _id: myDb.getObjectID(req.params.id)
-    })
+    myDb.state.test1
+      .collection("music")
+      .deleteOne({
+        _id: myDb.getObjectID(req.params.id)
+      })
 
-    .then(result => res.status(200).send(result));}
-    else{
-      res.status(403).send(status.data);
-    }
+      .then(result => res.status(200).send(result));
+  } else {
+    res.status(403).send(status.data);
+  }
 });
 module.exports = router;
