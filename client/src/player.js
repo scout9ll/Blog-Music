@@ -36,6 +36,8 @@ function initAudio() {
   rc = rough.canvas(document.getElementById("canvas"));
   //layout
   rc.rectangle(5, 5, 300, 200, { strokeWidth: 5 });
+  canvasCtx.fillStyle = "#33333369";
+  canvasCtx.fillRect(5, 5, 300, 200);
   //view
   rc.rectangle(150, 30, 130, 80);
   // footer
@@ -58,25 +60,6 @@ function drawBar() {
     rc.rectangle(bar_x, bar_y, bar_w, bar_h, { fill: "green" });
   }
 }
-// player design
-
-// canvas.height = 500;
-// canvas.width = 500;
-// const canvasCtx = canvas.getContext("2d");
-// canvasCtx.translate(100, 200);
-// const rc = rough.canvas(document.getElementById("canvas"));
-// //layout
-// rc.rectangle(5, 5, 300, 200, { strokeWidth: 5 });
-// //view
-// rc.rectangle(150, 30, 130, 80);
-// // footer
-// rc.rectangle(30, 207, 20, 10, { strokeWidth: 10 });
-// rc.rectangle(230, 207, 20, 10, { strokeWidth: 10 });
-// //soundMf
-// rc.circle(70, 100, 100, {
-//   fill: "black",
-//   fillStyle: "cross-hatch"
-// });
 
 //run it
 function rockMusic() {

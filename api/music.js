@@ -1,23 +1,49 @@
+const myDb = require("../db/db");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const router = express.Router();
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
-const uri =
-  "mongodb+srv://test:87955626@music-6epxh.mongodb.net/test1?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
 
+// login
+function authCheck(req, res) {
+  myDb.state.test1
+    .collection("account")
+    .findOne({ username: req.data.name, password: req.data.password })
+    .then(result =>
+      result[0]
+        ? res.send({ token: "justtesttoken" })
+        : res.send("sorry!this accout have no exist")
+    );
+}
+// check token
+const checkToken = async (req, res) => {
+  const account = await myDb.state.test1
+    .collection("account")
+    .findOne({ token: req.headers.authorization });
+  console.log(account);
+  if (account) {
+    return { ok: true, data: account };
+  } else {
+    return { ok: false, data: "oh,no,maybe you are not owner" };
+  }
+};
+
+// mongodb connect
+myDb.connect(err => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("database connected");
+  }
+});
 //get music
 router.get("/", (req, res) => {
-  client.connect(err => {
-    const collection = client.db("test1").collection("music");
-    collection
-      .find({})
-      .toArray()
-      .then(result => res.send(result));
-  });
+  myDb.state.test1
+    .collection("music")
+    .find({})
+    .toArray()
+    .then(result => res.send(result));
 });
 
 //upload music
@@ -31,14 +57,15 @@ const upload = multer({
   storage: storage
 }).single("musicFile");
 
-router.post("/upload", (req, res) => {
-  upload(req, res, err => {
-    if (err) {
-      res.send(err);
-    } else {
-      client.connect(err => {
-        const collection = client.db("test1").collection("music");
-        collection
+router.post("/upload", async (req, res) => {
+  const status = await checkToken(req, res);
+  if (status.ok) {
+    upload(req, res, err => {
+      if (err) {
+        res.send(err);
+      } else {
+        myDb.state.test1
+          .collection("music")
           .insertOne({
             name: req.file.originalname.split(".")[0],
             songUrl: "musics/" + req.file.originalname,
@@ -49,21 +76,25 @@ router.post("/upload", (req, res) => {
             res.status(201).send("thank you for your song");
           })
           .catch(err => res.send(err));
-      });
-    }
-  });
+      }
+    });
+  } else {
+    res.status(403).send(status.data);
+  }
 });
 // del music
 router.delete("/:id", (req, res) => {
-  client.connect(err => {
-    const collection = client.db("test1").collection("music");
+   const status = await checkToken(req, res);
+  if (status.ok) {
+  myDb.state.test1
+    .collection("music")
+    .deleteOne({
+      _id: myDb.getObjectID(req.params.id)
+    })
 
-    collection
-      .deleteOne({
-        _id: new mongodb.ObjectID(req.params.id)
-      })
-
-      .then(result => res.status(200).send(result));
-  });
+    .then(result => res.status(200).send(result));}
+    else{
+      res.status(403).send(status.data);
+    }
 });
 module.exports = router;
