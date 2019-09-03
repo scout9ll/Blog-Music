@@ -19,7 +19,14 @@
         <button :class="['paper-btn']" @click="delSong(song._id)" v-bind:disabled="loading">删除</button>
       </div>
       <div class="btn-add">
-        <button :class="['paper-btn']" @click="showUpload=true">添加歌曲</button>
+        <button :class="['paper-btn']">
+          <label for="local-play">
+            本地播放
+            <input type="file" id="local-play" @change="localPlay" />
+          </label>
+        </button>
+
+        <button :class="['paper-btn']" @click="showUpload=true">在线添加</button>
       </div>
       <div :class="['upload-form',showUpload?'upload-form-active':'']">
         <div class="btn-upload-close" @click="showUpload=false">X</div>
@@ -110,6 +117,16 @@ export default {
     },
     selectSong: function() {
       this.songFile = this.$refs.ulDom.files[0];
+    },
+    localPlay: function(e) {
+      let song = e.target.files[0];
+      //   audio.file = song;
+      const reader = new FileReader();
+      reader.readAsDataURL(song);
+      reader.onload = e => {
+        this.currentSong.songUrl = e.target.result;
+        this.currentSong.name = song.name;
+      };
     },
     delSong: function(id) {
       this.message = "正在删除...";
@@ -229,8 +246,14 @@ export default {
 }
 .btn-add {
   position: absolute;
+  width: 80%;
   right: 20px;
   bottom: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+#local-play {
+  display: none;
 }
 .upload-form {
   position: absolute;
