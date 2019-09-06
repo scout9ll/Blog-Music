@@ -18,6 +18,11 @@
         <!-- <span>{{song.songImage}}</span> -->
         <button :class="['paper-btn']" @click="delSong(song._id)" v-bind:disabled="loading">删除</button>
       </div>
+      <div class="btn-close-list" @click="showList=false">
+        <span>></span>
+        <span>></span>
+        <span>></span>
+      </div>
       <div class="btn-add">
         <button :class="['paper-btn']">
           <label for="local-play">
@@ -91,7 +96,7 @@ export default {
       );
       let nextRandomIndex = Math.floor(Math.random() * this.songList.length);
 
-      while (currentIndex == nextRandomIndex) {
+      while (currentIndex == nextRandomIndex && this.songList.length > 1) {
         nextRandomIndex = Math.floor(Math.random() * this.songList.length);
       }
       this.currentSong = this.songList[nextRandomIndex];
@@ -119,9 +124,11 @@ export default {
       this.songFile = this.$refs.ulDom.files[0];
     },
     localPlay: function(e) {
+      console.log("adddd");
       let song = e.target.files[0];
       //   audio.file = song;
       const reader = new FileReader();
+      e.target.files = null;
       reader.readAsDataURL(song);
       reader.onload = e => {
         this.currentSong.songUrl = e.target.result;
@@ -224,11 +231,20 @@ export default {
   border: black solid 6px;
   overflow: hidden;
 
-  /* background: linear-gradient(to bottom, #4da0b0, #d39d38); */
+  z-index: 9999;
+}
+@keyframes move {
+  0%,
+  100% {
+    background-position-x: left;
+  }
+  50% {
+    background-position-x: right;
+  }
 }
 .songList-active {
   transform: translateX(0px);
-  background-color: #ffffff54;
+  background: #95fbfb7a;
   box-shadow: -7px 0px 3px 1px rgba(0, 0, 0, 0.4);
 }
 .songList-item {
@@ -243,6 +259,22 @@ export default {
 }
 .songImage:hover {
   display: block;
+}
+.btn-close-list {
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  animation: closeList 1s steps(4) infinite;
+  cursor: pointer;
+}
+@keyframes closeList {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 50px;
+  }
 }
 .btn-add {
   position: absolute;
@@ -317,7 +349,7 @@ button,
   /* top: calc(50% - 70px);
   left: calc(50% - 119px);
   z-index: 100; */
-  left: 153px;
+  left: 75px;
   bottom: 300px;
   height: 20px;
   width: 52px;

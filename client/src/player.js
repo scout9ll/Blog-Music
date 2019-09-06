@@ -9,6 +9,34 @@ let audioElement,
   rc,
   canvasCtx;
 //获取媒体元素,用来生成声音源
+function drawShadow(id) {
+  const canvas = document.getElementById(id);
+  canvas.width = 350;
+  canvas.height = 500;
+  let canvasCtx = canvas.getContext("2d");
+  canvasCtx.translate(25, 200);
+  let rc = rough.canvas(document.getElementById(id));
+  //layout
+  rc.rectangle(5, 5, 300, 200, {
+    strokeWidth: 5,
+    fill: "#17120794",
+    fillStyle: "solid" // solid fill
+  });
+  rc.line(5, 205, 105, 105);
+  // button
+  rc.rectangle(45, -15, 40, 20, {
+    fill: "#17120794"
+  });
+  rc.rectangle(230, -15, 24, 20, {
+    fill: "#17120794"
+  });
+  //view
+  rc.rectangle(150, 30, 130, 80);
+  // footer
+  rc.rectangle(30, 207, 20, 10, { strokeWidth: 10 });
+  rc.rectangle(230, 207, 20, 10, { strokeWidth: 10 });
+}
+
 function initAudio() {
   audioElement = document.querySelector("audio");
   // 设置允许跨域,audioContext连接对跨域有限制
@@ -29,15 +57,14 @@ function initAudio() {
   //生成8位为一个item,长度为bufferLength的array
   dataArray = new Uint8Array(bufferLength);
   const canvas = document.getElementById("canvas");
+  canvas.width = 350;
   canvas.height = 500;
-  canvas.width = 500;
   canvasCtx = canvas.getContext("2d");
-  canvasCtx.translate(100, 200);
+  canvasCtx.translate(25, 200);
   rc = rough.canvas(document.getElementById("canvas"));
   //layout
   rc.rectangle(5, 5, 300, 200, { strokeWidth: 5 });
-  canvasCtx.fillStyle = "#33333369";
-  canvasCtx.fillRect(5, 5, 300, 200);
+
   //view
   rc.rectangle(150, 30, 130, 80);
   // footer
@@ -48,6 +75,7 @@ function initAudio() {
     fill: "black",
     fillStyle: "cross-hatch"
   });
+  drawShadow("canvas-shadow");
 }
 function drawBar() {
   canvasCtx.clearRect(150, 30, 130, 80);
