@@ -8,7 +8,6 @@
       @timeupdate="onPlay"
       @canplay="loadInfo"
       @ended="autoChange"
-      loop="loop"
     ></audio>
     <canvas id="canvas"></canvas>
     <canvas id="canvas-shadow"></canvas>
@@ -45,7 +44,7 @@
 
 
 <script>
-import player from "../player.js";
+import player from "../visualPlayer/player.js";
 export default {
   name: "HandDrawPlayer",
 

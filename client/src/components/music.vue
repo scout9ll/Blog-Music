@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-import MusicService from "../musicService";
+import MusicService from "../api/musicService.js";
 import HandDrawPlayer from "./player.vue";
 export default {
   name: "music",
