@@ -7,7 +7,10 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000"
+        target: "https://steve911-music-player.herokuapp.com"
+      },
+      "/music": {
+        target: "https://steve911-music-player.herokuapp.com"
       }
     }
   },

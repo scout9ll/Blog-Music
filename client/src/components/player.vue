@@ -51,12 +51,12 @@ export default {
   data() {
     return {
       currentTime: "",
-      duration: "",
-      resume: false
+      duration: ""
     };
   },
   props: {
-    song: Object
+    song: Object,
+    resume: Boolean
   },
   methods: {
     onPlay() {
@@ -70,15 +70,18 @@ export default {
       this.duration = `${Math.floor(duration / 60)}:${
         duration % 60 > 9 ? duration % 60 : "0" + (duration % 60)
       }`;
-      this.resume ? this.$refs.audio.play() : "";
+      this.resume
+        ? this.$refs.audio.play()
+        : this.$refs.guideLine.classList.contains("hidden-guide")
+        ? this.startPlay()
+        : "";
     },
     startPlay() {
-      console.log(this.$refs);
       this.$refs.guideLine.classList.add("hidden-guide");
       if (this.resume) {
         this.$refs.audio.pause();
         cancelAnimationFrame(player.getFrameID());
-        this.resume = false;
+        this.$emit("update:resume", false);
       } else {
         player
           .getAudioCtx()
@@ -86,12 +89,11 @@ export default {
           .then(() => {
             this.$refs.audio.play();
             player.rockMusic();
-            this.resume = true;
+            this.$emit("update:resume", true);
           });
       }
     },
     autoChange() {
-      console.log("over");
       this.$emit("song-ended");
     }
   },
