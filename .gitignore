@@ -5,7 +5,7 @@
 
 # frontend files
 client/
-
+/client
 #music files
 /public/musics
 
