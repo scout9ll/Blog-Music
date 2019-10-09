@@ -83,7 +83,7 @@ router.post("/upload", async (req, res) => {
   }
 });
 // del music
-router.delete("/:id", async (req, res) => {
+router.patch("/", async (req, res) => {
   const status = await checkToken(req, res);
   if (status.ok) {
     myDb.state.test1
@@ -93,6 +93,25 @@ router.delete("/:id", async (req, res) => {
       })
 
       .then(result => res.status(200).send(result));
+  } else {
+    res.status(403).send(status.data);
+  }
+});
+
+// edit music
+router.patch("/", async (req, res) => {
+  const status = await checkToken(req, res);
+  if (status.ok) {
+    myDb.state.test1
+      .collection("music")
+      .updateOne({
+        _id: myDb.getObjectID(req.body.id),
+        name:req.body.name,
+        songImage:req.body.songImage
+
+      })
+
+      .then(result => res.status(201).send(result));
   } else {
     res.status(403).send(status.data);
   }
