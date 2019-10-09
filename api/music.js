@@ -102,7 +102,7 @@ router.delete("/", async (req, res) => {
 router.patch("/", async (req, res) => {
   const status = await checkToken(req, res);
   if (status.ok) {
-    console.log(res.body);
+    console.log(req.body);
     myDb.state.test1
       .collection("music")
       .updateOne({
