@@ -83,7 +83,7 @@ router.post("/upload", async (req, res) => {
   }
 });
 // del music
-router.patch("/", async (req, res) => {
+router.delete("/", async (req, res) => {
   const status = await checkToken(req, res);
   if (status.ok) {
     myDb.state.test1
@@ -102,13 +102,13 @@ router.patch("/", async (req, res) => {
 router.patch("/", async (req, res) => {
   const status = await checkToken(req, res);
   if (status.ok) {
+    console.log(res.body);
     myDb.state.test1
       .collection("music")
       .updateOne({
-        _id: myDb.getObjectID(req.body.id),
-        name:req.body.name,
-        songImage:req.body.songImage
-
+        _id: myDb.getObjectID(req.body._id),
+        name: req.body.name,
+        songImage: req.body.songImage
       })
 
       .then(result => res.status(201).send(result));
