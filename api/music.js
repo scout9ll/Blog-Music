@@ -105,11 +105,11 @@ router.patch("/", async (req, res) => {
     console.log(req.body);
     myDb.state.test1
       .collection("music")
-      .updateOne({
-        _id: myDb.getObjectID(req.body._id),
-        name: req.body.name,
-        songImage: req.body.songImage
-      })
+      .updateOne(
+        { _id: myDb.getObjectID(req.body._id) },
+
+        { $set: { name: req.body.name, songImage: req.body.songImage } }
+      )
 
       .then(result => res.status(201).send(result));
   } else {
