@@ -83,7 +83,7 @@ router.post("/upload", async (req, res) => {
   }
 });
 // del music
-router.delete("/", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const status = await checkToken(req, res);
   if (status.ok) {
     myDb.state.test1
