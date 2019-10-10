@@ -79,7 +79,7 @@ router.post("/upload", async (req, res) => {
       }
     });
   } else {
-    res.status(403).send(status.data);
+    res.status(401).send(status.data);
   }
 });
 // del music
@@ -94,7 +94,7 @@ router.delete("/", async (req, res) => {
 
       .then(result => res.status(200).send(result));
   } else {
-    res.status(403).send(status.data);
+    res.status(401).send(status.data);
   }
 });
 
@@ -113,7 +113,7 @@ router.patch("/", async (req, res) => {
 
       .then(result => res.status(201).send(result));
   } else {
-    res.status(403).send(status.data);
+    res.status(401).send(status.data);
   }
 });
 module.exports = router;
