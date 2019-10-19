@@ -583,7 +583,7 @@ export default {
   transform: translateY(-900px);
 }
 .edit-form {
-  top: -500px;
+  top: -600px;
   .edit-form-controls {
     display: flex;
     flex-direction: column;
