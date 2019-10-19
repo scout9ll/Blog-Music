@@ -187,7 +187,7 @@ audio {
   transform: rotate(223deg);
 }
 .guide-text {
-  color: aliceblue;
+  color: black;
   font-style: oblique;
 }
 .hidden-guide {

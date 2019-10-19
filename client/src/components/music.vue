@@ -477,6 +477,7 @@ export default {
     align-items: center;
     &.song-set {
       justify-content: flex-end;
+      margin-top: 8px;
       button {
         margin: 0 10px;
       }
