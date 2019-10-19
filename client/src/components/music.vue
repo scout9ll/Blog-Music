@@ -214,12 +214,12 @@ export default {
   data() {
     return {
       songList: [{}],
-      currentSong: {},
+      currentSong: {
+        songUrl: ""
+      },
       songFile: {},
       songImage: "",
       loading: false,
-      // error: "",
-      // message: "",
       showList: false,
       showUpload: false,
       myMv: "",
@@ -290,12 +290,14 @@ export default {
       this.songFile = this.$refs.ulDom.files[0];
     },
     localPlay: function(e) {
-      console.log("adddd");
       let song = e.target.files[0];
-      //   audio.file = song;
+      if (!song.type.includes("audio")) {
+        return this.$toast({ text: "请上传audio类型文件", mode: "danger" });
+      }
       const reader = new FileReader();
+
       e.target.files = null;
-      reader.readAsDataURL(song);
+      reader.readAsDataURL(song); //to base64
       reader.onload = e => {
         this.currentSong.songUrl = e.target.result;
         this.currentSong.name = song.name;
@@ -337,6 +339,9 @@ export default {
         });
     },
     uploadSong: function() {
+      if (!this.songFile.type.includes("audio")) {
+        return this.$toast({ text: "请上传audio类型文件", mode: "danger" });
+      }
       const formData = new FormData();
       formData.append("musicFile", this.songFile);
       // console.log(formData.get("musicFile"));

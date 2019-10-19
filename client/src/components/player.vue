@@ -5,7 +5,7 @@
     <slot name="state"></slot>
 
     <audio
-      :src="'/'+song.songUrl"
+      :src="(song.songUrl.includes('base64')?'':'/')+song.songUrl"
       ref="audio"
       @timeupdate="onPlay"
       @canplay="loadInfo"
