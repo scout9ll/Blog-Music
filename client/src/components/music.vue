@@ -369,7 +369,7 @@ export default {
   },
   watch: {
     currentSong: function() {
-      this.$emit("postImg", this.currentSong.songImage);
+      this.$emit("postImg", this.currentSong.songImage, this.currentSong.name);
       this.songLoading = true;
     }
   },
