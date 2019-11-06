@@ -259,9 +259,17 @@ export default {
       const icon = document.querySelector(".btn-image-preview");
       icon.classList.toggle("on-preview");
       if (cover == this.onEditSong.songImage) {
-        this.$emit(`postImg`, this.currentSong.songImage);
+        this.$emit(
+          `postImg`,
+          this.currentSong.songImage,
+          this.currentSong.songImage
+        );
       } else {
-        this.$emit(`postImg`, this.onEditSong.songImage);
+        this.$emit(
+          `postImg`,
+          this.onEditSong.songImage,
+          this.onEditSong.songImage
+        );
       }
     },
     shakePlayer() {
