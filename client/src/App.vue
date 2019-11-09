@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 body {
   margin: 0;
 }
@@ -52,17 +52,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-
   width: 100vw;
   height: 100vh;
-
-  background: no-repeat cover center;
 }
-img {
+/* img {
   position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: -9999;
-}
+} */
 </style>

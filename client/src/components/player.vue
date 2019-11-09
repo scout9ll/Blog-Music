@@ -155,7 +155,7 @@ audio {
 }
 .guide-line {
   position: absolute;
-  left: 229px;
+  left: 222.5px;
   bottom: 330px;
   display: flex;
   flex-direction: column;
