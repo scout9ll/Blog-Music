@@ -32,7 +32,8 @@ export default {
         if (imgName == "Rain") {
           rainDay.instance = new RainDay({ image: "app" });
         } else {
-          if (rainDay.instance) {
+          if (rainDay.instance && rainDay.instance.canvas) {
+            console.log(rainDay.instance);
             rainDay.instance.destroy();
           }
         }
