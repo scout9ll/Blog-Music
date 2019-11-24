@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     changeImage(imgUrl, imgName) {
-      console.log(imgName);
+      // console.log(imgName);
       const defaultImg = "https://w.wallhaven.cc/full/0j/wallhaven-0jk2gw.jpg";
       imgUrl = imgUrl || defaultImg;
       this.imgUrl = imgUrl;
@@ -33,7 +33,6 @@ export default {
           rainDay.instance = new RainDay({ image: "app" });
         } else {
           if (rainDay.instance && rainDay.instance.canvas) {
-            console.log(rainDay.instance);
             rainDay.instance.destroy();
           }
         }

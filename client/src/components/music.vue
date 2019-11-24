@@ -578,14 +578,16 @@ export default {
 }
 .edit-form,
 .upload-form {
-  position: relative;
+  position: absolute;
   right: 20px;
-  bottom: -900px;
   width: 80%;
   transform: translateY(0px);
   transition: all 2s ease-in-out;
   padding: 50px 10px;
   background-color: rgba(255, 255, 255, 0.8);
+}
+.upload-form {
+  bottom: -500px;
 }
 .upload-form-active {
   transform: translateY(-900px);
@@ -598,6 +600,10 @@ export default {
     font-size: 17px;
     text-align: start;
     padding: 10px;
+    label > input {
+      background: transparent;
+      text-align: center;
+    }
     .paper-btn {
       margin-top: 10px;
     }
@@ -625,7 +631,8 @@ export default {
   }
 }
 .edit-form-active {
-  transform: translateY(500px);
+  transform: translateY(-50%);
+  top: 50vh;
 }
 .btn-upload-close,
 .btn-edit-close {
