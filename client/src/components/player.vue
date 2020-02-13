@@ -154,6 +154,7 @@ audio {
   opacity: 0.3;
 }
 .guide-line {
+  width: 80px;
   position: absolute;
   left: 222.5px;
   bottom: 330px;

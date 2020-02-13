@@ -1,10 +1,8 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-const uri =
-  "mongodb+srv://test:87955626@music-6epxh.mongodb.net/test1?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
+const { mongoUrl, dbName } = require('./dbVar')
+const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const dbName = "test1";
 const state = {
   [dbName]: null
 };
