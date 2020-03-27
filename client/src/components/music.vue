@@ -6,8 +6,7 @@
           <div
             v-bind:key="song._id"
             v-for="song in songList"
-            class="songList-item"
-            :style="{background:song._id==setID?'linear-gradient(180deg, #7bc199, #27663317)':''}"
+            :class="[`songList-item` ,setID==song._id?'song-in-set':'']"
           >
             <div
               :class="[`song-item-row` ,`song-primary`,currentSong._id==song._id?'song-in-player':'']"
@@ -42,7 +41,7 @@
                 </svg>
               </span>
               <span class="song-name">{{song.name}}</span>
-              <span class="song-set-btn" @click="setID=setID==song._id?'':song._id">
+              <span class="song-set-btn" @click="expandSet(song._id)">
                 <svg
                   t="1570096405983"
                   class="icon"
@@ -62,7 +61,7 @@
               </span>
             </div>
 
-            <div class="song-item-row song-set" v-show="song._id==setID">
+            <div class="song-item-row song-set">
               <span class="songImage">{{song.songImage}}</span>
               <button
                 :class="['paper-btn','song-del-btn',loading?`disable`:'']"
@@ -219,6 +218,7 @@ export default {
   },
   data() {
     return {
+      scroll: {},
       songList: [{}],
       currentSong: {
         songUrl: ""
@@ -235,6 +235,27 @@ export default {
       showEdit: false,
       onEditSong: {}
     };
+  },
+  created() {
+    this.getSong().then(() => {
+      this.$toast({
+        text: "成功获取歌曲~~",
+        mode: "success"
+      });
+      this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.wrapper, {
+          scrollY: true,
+          click: true
+        });
+      });
+    });
+  },
+  mounted() {
+    // console.log(rough, MusicVisualizer);
+    // this.myMv = new MusicVisualizer();
+    // this.myMv.connect(this.$refs.myPlayer, 64, this.$refs.music);
+    // this.myMv.create("Bar");
+    drawLoading("song-load");
   },
   methods: {
     autoChange() {
@@ -260,6 +281,9 @@ export default {
       this.onEditSong = { ...song };
       this.showEdit = true;
     },
+    expandSet(id) {
+      this.setID = this.setID == id ? "" : id;
+    },
     handlePreview() {
       const cover = this.$root.$children[0].imgUrl;
       const icon = document.querySelector(".btn-image-preview");
@@ -282,23 +306,14 @@ export default {
       this.$refs.player.$el.classList.add("shake");
       setTimeout(() => this.$refs.player.$el.classList.remove("shake"), 2000);
     },
-    getSong: function() {
+    getSong() {
       this.loading = true;
       return MusicService.getMusic()
         .then(res => {
           this.songList = res;
           this.loading = false;
           this.currentSong._id ? "" : (this.currentSong = this.songList[0]);
-          this.$toast({
-            text: "成功获取歌曲~~",
-            mode: "success"
-          });
-          this.$nextTick(() => {
-            this.scroll = new BScroll(this.$refs.wrapper, {
-              scrollY: true,
-              click: true
-            });
-          });
+          this.scroll.refresh && this.scroll.refresh();
         })
         .catch(err => {
           this.shakePlayer();
@@ -392,16 +407,6 @@ export default {
       this.$emit("postImg", this.currentSong.songImage, this.currentSong.name);
       this.songLoading = true;
     }
-  },
-  created() {
-    this.getSong();
-  },
-  mounted() {
-    // console.log(rough, MusicVisualizer);
-    // this.myMv = new MusicVisualizer();
-    // this.myMv.connect(this.$refs.myPlayer, 64, this.$refs.music);
-    // this.myMv.create("Bar");
-    drawLoading("song-load");
   }
 };
 </script>
@@ -490,10 +495,18 @@ export default {
 .songList-item {
   margin-bottom: 15px;
   padding: 10px;
+  height: 18px;
   // border-bottom: 2px black double;
-  transition: 0.5s all;
+  transition: 0.4s all;
+  background: linear-gradient(180deg, transparent, transparent);
+  overflow: hidden;
   &:hover {
     box-shadow: seagreen 1px 1px 1px 0px;
+  }
+  &.song-in-set {
+    height: 60px;
+    transition-delay: 0.4s;
+    background: linear-gradient(180deg, #7bc199, #27663317);
   }
   .song-item-row {
     display: flex;
