@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "./axios";
 
 const url = "api/music/";
 const header = {};
-const token = window.localStorage.getItem("token");
+
 class MusicService {
   static getMusic() {
     return axios.get(url, { "Content-Type": "application/json" }).then(res =>
@@ -15,7 +15,6 @@ class MusicService {
     return axios.post(url, data, { "Content-Type": "application/json" });
   }
   static uploadMusic(data) {
-    header["Authorization"] = token;
     header["Content-Type"] = "multipart/form-data";
     return axios({
       method: "post",
@@ -26,7 +25,6 @@ class MusicService {
     // axios.post(`${url}upload`, data, header);
   }
   static delMusic(id) {
-    header["Authorization"] = token;
     return axios({
       method: "delete",
       url: `${url}${id}`,
@@ -34,7 +32,6 @@ class MusicService {
     });
   }
   static updateMusic(data) {
-    header["Authorization"] = token;
     header["content-type"] = "application/json";
     return axios({
       method: "PATCH",
