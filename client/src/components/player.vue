@@ -29,13 +29,19 @@
 
 
 <script>
-import player from "../visualPlayer/player.js";
+// import player from "../visualPlayer/player.js";
+import soundPublisher from "../visualPlayer/soundsPublisher.js";
+import { MusicPlayer,
+SoundLine 
+} from "../visualPlayer/soundsObservers.js";
+
 import { detectmob } from "../utils/adapter.js";
 export default {
   name: "HandDrawPlayer",
 
   data() {
     return {
+      player:{},
       currentTime: "0:00",
       duration: "",
       timePercent: ""
@@ -71,17 +77,14 @@ export default {
       this.$refs.guideLine.classList.add("hidden-guide");
       if (this.resume) {
         this.$refs.audio.pause();
-        cancelAnimationFrame(player.getFrameID());
+        this.player.pause();
         this.$emit("update:resume", false);
       } else {
-        player
-          .getAudioCtx()
-          .resume()
-          .then(() => {
-            this.$refs.audio.play();
-            player.rockMusic();
-            this.$emit("update:resume", true);
-          });
+        this.player.play().then(() =>{
+          this.$refs.audio.play();
+          this.$emit("update:resume", true);
+        }
+        )
       }
     },
     autoChange() {
@@ -99,7 +102,12 @@ export default {
         window.location.href = "/";
       }, 1600);
     } else {
-      player.initAudio();
+    this.player =  new soundPublisher(this.$refs.audio,64)
+    this.player.subscribe([
+      new MusicPlayer(document.getElementById("canvas"))
+    // ,new SoundLine(document.getElementById("sound-line"))
+    ])
+      // player.initAudio();
     }
   }
 };

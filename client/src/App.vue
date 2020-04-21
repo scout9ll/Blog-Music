@@ -1,5 +1,6 @@
 <template>
   <div id="app" :style="appStyle">
+     <canvas id="sound-line"></canvas>
     <music msg="Welcome to Steve911's player" v-on:postImg="changeImage" />
   </div>
 </template>
@@ -81,6 +82,11 @@ body {
   color: #2c3e50;
   width: 100vw;
   height: 100vh;
+}
+#sound-line{
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 /* img {
   position: fixed;
