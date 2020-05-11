@@ -160,6 +160,7 @@ audio {
   transform: scaleY(0.45) skewX(-35deg);
   flood-opacity: 0%;
   opacity: 0.3;
+  filter:blur(10px)
 }
 .guide-line {
   width: 80px;
