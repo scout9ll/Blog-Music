@@ -27,7 +27,7 @@ export class MusicPlayer {
             fillStyle: "cross-hatch"
         });
         this.dataArray
-        // drawShadow("canvas-shadow");
+        this.drawShadow("canvas-shadow");
     }
     init(analyser,bufferLength) {
         this.dataArray = new Uint8Array(bufferLength);
@@ -47,6 +47,34 @@ export class MusicPlayer {
     pause(){
         cancelAnimationFrame(this.frameID);
     }
+
+    drawShadow(id) {
+        const canvas = document.getElementById(id);
+        canvas.width = 350;
+        canvas.height = 500;
+        let canvasCtx = canvas.getContext("2d");
+        canvasCtx.translate(25, 200);
+        let rc = rough.canvas(document.getElementById(id));
+        //layout
+        rc.rectangle(5, 5, 300, 200, {
+          strokeWidth: 5,
+          fill: "#17120794",
+          fillStyle: "solid" // solid fill
+        });
+        rc.line(5, 205, 105, 105);
+        // button
+        rc.rectangle(45, -15, 40, 20, {
+          fill: "#17120794"
+        });
+        rc.rectangle(230, -15, 24, 20, {
+          fill: "#17120794"
+        });
+        //view
+        rc.rectangle(150, 30, 130, 80);
+        // footer
+        rc.rectangle(30, 207, 20, 10, { strokeWidth: 10 });
+        rc.rectangle(230, 207, 20, 10, { strokeWidth: 10 });
+      }
 
     //run it
     play(analyser,bufferLength) {
