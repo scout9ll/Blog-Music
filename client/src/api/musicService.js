@@ -5,22 +5,23 @@ const header = {};
 
 class MusicService {
   static getMusic() {
-    return axios.get(url, { "Content-Type": "application/json" }).then(res =>
-      res.data.map(music => ({
-        ...music
+    return axios.get(url, { "Content-Type": "application/json" }).then((res) =>
+      res.data.map((music) => ({
+        ...music,
       }))
     );
   }
   static addMusic(data) {
     return axios.post(url, data, { "Content-Type": "application/json" });
   }
-  static uploadMusic(data) {
+  static uploadMusic(data,onUploadProgress) {
     header["Content-Type"] = "multipart/form-data";
     return axios({
       method: "post",
       url: `${url}upload`,
       data: data,
-      headers: header
+      headers: header,
+      onUploadProgress
     });
     // axios.post(`${url}upload`, data, header);
   }
@@ -28,7 +29,7 @@ class MusicService {
     return axios({
       method: "delete",
       url: `${url}${id}`,
-      headers: header
+      headers: header,
     });
   }
   static updateMusic(data) {

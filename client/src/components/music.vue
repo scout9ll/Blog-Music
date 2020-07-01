@@ -382,7 +382,9 @@ export default {
       // console.log(formData.get("musicFile"));
       formData.append("songImage", this.songImage);
       this.loading = true;
-      MusicService.uploadMusic(formData)
+      MusicService.uploadMusic(formData, uploadEvent => {
+        console.log(uploadEvent);
+      })
         .then(res => {
           this.$toast({ text: res.data, mode: "success" });
           this.loading = false;
