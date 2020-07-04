@@ -1,6 +1,11 @@
 const path = require("path");
 
 module.exports = {
+  configureWebpack: {
+    resolve: {
+      extensions: ['.ts']
+    },
+  },
   outputDir: path.resolve(__dirname, "../public/project/music"),
   //resolve拼接成输出的绝对路径
   //如果在处理完所有给定的 path 片段之后还未生成绝对路径，则再加上当前工作目录。
