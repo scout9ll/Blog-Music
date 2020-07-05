@@ -5,6 +5,11 @@ module.exports = {
     resolve: {
       extensions: ['.ts']
     },
+    module: {
+      rules: [
+        { test: /\.ts$/, use: 'babel-loader' }
+      ]
+    }
   },
   outputDir: path.resolve(__dirname, "../public/project/music"),
   //resolve拼接成输出的绝对路径
