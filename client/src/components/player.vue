@@ -1,6 +1,6 @@
 <template>
   <div class="player">
-    <button @click="startPlay" :class="['btn-play',resume?'btn-play-active':'']"></button>
+    <button @click="handlePress(song)" :class="['btn-play',playState?'btn-play-active':'']"></button>
     <slot name="listButton"></slot>
     <slot name="state"></slot>
 
@@ -20,7 +20,7 @@
         :style="{background: `linear-gradient(90deg, #619c71, transparent ${timePercent*1.5}%) `}"
       >{{currentTime}}/{{duration}}</div>
     </div>
-    <div class="guide-line" ref="guideLine">
+    <div :class="['guide-line',pressed?'hidden-guide':'']" ref="guideLine">
       <span class="guide-text">press it !!</span>
       <img src="../assets/icon-arrow-down.svg" alt class="icon" />
     </div>
@@ -29,11 +29,9 @@
 
 
 <script>
-// import player from "../visualPlayer/player.js";
+import { mapState, mapActions } from "vuex";
 import soundPublisher from "../visualPlayer/soundsPublisher.js";
-import { MusicPlayer,
-SoundLine 
-} from "../visualPlayer/soundsObservers.js";
+import { MusicPlayer, SoundLine } from "../visualPlayer/soundsObservers.js";
 
 import { detectmob } from "../utils/adapter.js";
 export default {
@@ -41,7 +39,6 @@ export default {
 
   data() {
     return {
-      player:{},
       currentTime: "0:00",
       duration: "",
       timePercent: ""
@@ -49,10 +46,13 @@ export default {
   },
   props: {
     song: Object,
-    resume: Boolean,
     songLoading: Boolean
   },
+  computed: {
+    ...mapState(["playState", "soundPublisher", "pressed"])
+  },
   methods: {
+    ...mapActions(["handlePress", "playSong"]),
     onPlay() {
       const currentTime = parseInt(this.$refs.audio.currentTime);
       const duration = parseInt(this.$refs.audio.duration);
@@ -67,25 +67,7 @@ export default {
       this.duration = `${Math.floor(duration / 60)}:${
         duration % 60 > 9 ? duration % 60 : "0" + (duration % 60)
       }`;
-      this.resume
-        ? this.$refs.audio.play()
-        : this.$refs.guideLine.classList.contains("hidden-guide")
-        ? this.startPlay()
-        : "";
-    },
-    startPlay() {
-      this.$refs.guideLine.classList.add("hidden-guide");
-      if (this.resume) {
-        this.$refs.audio.pause();
-        this.player.pause();
-        this.$emit("update:resume", false);
-      } else {
-        this.player.play().then(() =>{
-          this.$refs.audio.play();
-          this.$emit("update:resume", true);
-        }
-        )
-      }
+      this.pressed ? this.playSong() : "";
     },
     autoChange() {
       this.$emit("song-ended");
@@ -102,12 +84,14 @@ export default {
         window.location.href = "/";
       }, 1600);
     } else {
-    this.player =  new soundPublisher(this.$refs.audio,64)
-    this.player.subscribe([
-      new MusicPlayer(document.getElementById("canvas"))
-    // ,new SoundLine(document.getElementById("sound-line"))
-    ])
-      // player.initAudio();
+      this.$store.commit(
+        "SET_SOUNDPUBLISHER",
+        new soundPublisher(this.$refs.audio, 64)
+      );
+      this.soundPublisher.subscribe([
+        new MusicPlayer(document.getElementById("canvas"))
+        // ,new SoundLine(document.getElementById("sound-line"))
+      ]);
     }
   }
 };
@@ -160,7 +144,7 @@ audio {
   transform: scaleY(0.45) skewX(-35deg);
   flood-opacity: 0%;
   opacity: 0.3;
-  filter:blur(10px)
+  filter: blur(10px);
 }
 .guide-line {
   width: 80px;
@@ -194,7 +178,7 @@ audio {
   }
 }
 @media screen and (max-width: 750px) {
-  .player {
+  .soundPublisher {
     overflow: hidden;
   }
 }

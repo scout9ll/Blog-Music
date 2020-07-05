@@ -20,7 +20,7 @@ class MusicBar {
     canvasCtx.rotate(Math.PI / (32 / 2));
     rc.rectangle(this.x, this.y - bar_h / 4, this.w, bar_h / 4, {
       roughness: this.roughness,
-      fill: this.color
+      fill: this.color,
     });
   }
   static create(bufferLength, container, detail = {}) {

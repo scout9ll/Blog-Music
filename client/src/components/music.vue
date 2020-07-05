@@ -12,8 +12,8 @@
               :class="[`song-item-row` ,`song-primary`,currentSong._id==song._id?'song-in-player':'']"
             >
               <span
-                @click="handlePlay(song)"
-                :class="[`song-play-btn`,currentSong._id==song._id&&resume?`onplay`:'pause']"
+                @click="handlePress(song)"
+                :class="[`song-play-btn`,currentSong._id==song._id&&playState?`onplay`:'pause']"
               >
                 <svg
                   t="1570094903377"
@@ -176,7 +176,6 @@
       </div>
     </div>
     <HandDrawPlayer
-      v-bind:resume.sync="resume"
       v-bind:songLoading.sync="songLoading"
       :song="currentSong"
       @song-ended="autoChange"
@@ -207,6 +206,7 @@
   </div>
 </template>
 <script>
+import {mapState,mapActions,mapMutations} from 'vuex'
 import MusicService from "../api/musicService.js";
 import HandDrawPlayer from "./player.vue";
 import drawLoading from "../visualPlayer/loadingAnimation";
@@ -220,9 +220,6 @@ export default {
     return {
       scroll: {},
       songList: [{}],
-      currentSong: {
-        songUrl: ""
-      },
       songFile: {},
       songImage: "",
       loading: false,
@@ -230,7 +227,6 @@ export default {
       showUpload: false,
       myMv: "",
       setID: "",
-      resume: false,
       songLoading: true,
       showEdit: false,
       onEditSong: {}
@@ -251,13 +247,14 @@ export default {
     });
   },
   mounted() {
-    // console.log(rough, MusicVisualizer);
-    // this.myMv = new MusicVisualizer();
-    // this.myMv.connect(this.$refs.myPlayer, 64, this.$refs.music);
-    // this.myMv.create("Bar");
     drawLoading("song-load");
   },
+  computed:{
+    ...mapState(['currentSong','playState','soundPublisher'])
+  },
   methods: {
+    ...mapActions(['handlePress']),
+    ...mapMutations(['SET_CURRENT_SONG']),
     autoChange() {
       // console.log("recieve success");
       const currentIndex = this.songList.findIndex(
@@ -268,14 +265,8 @@ export default {
       while (currentIndex == nextRandomIndex && this.songList.length > 1) {
         nextRandomIndex = Math.floor(Math.random() * this.songList.length);
       }
-      this.currentSong = this.songList[nextRandomIndex];
-    },
-    handlePlay(song) {
-      const player = this.$refs.player;
-      player.$refs.guideLine.classList.add("hidden-guide");
-      this.currentSong._id == song._id
-        ? player.startPlay()
-        : (this.currentSong = song);
+      this.$store.commit('SET_CURRENT_SONG',this.songList[nextRandomIndex]);
+      // this.currentSong = this.songList[nextRandomIndex];
     },
     handleEdit(song) {
       this.onEditSong = { ...song };
@@ -285,22 +276,22 @@ export default {
       this.setID = this.setID == id ? "" : id;
     },
     handlePreview() {
-      const cover = this.$root.$children[0].imgUrl;
-      const icon = document.querySelector(".btn-image-preview");
-      icon.classList.toggle("on-preview");
-      if (cover == this.onEditSong.songImage) {
-        this.$emit(
-          `postImg`,
-          this.currentSong.songImage,
-          this.currentSong.songImage
-        );
-      } else {
-        this.$emit(
-          `postImg`,
-          this.onEditSong.songImage,
-          this.onEditSong.songImage
-        );
-      }
+      // const cover = this.$root.$children[0].imgUrl;
+      // const icon = document.querySelector(".btn-image-preview");
+      // icon.classList.toggle("on-preview");
+      // if (cover == this.onEditSong.songImage) {
+      //   this.$emit(
+      //     `postImg`,
+      //     this.currentSong.songImage,
+      //     this.currentSong.songImage
+      //   );
+      // } else {
+      //   this.$emit(
+      //     `postImg`,
+      //     this.onEditSong.songImage,
+      //     this.onEditSong.songImage
+      //   );
+      // }
     },
     shakePlayer() {
       this.$refs.player.$el.classList.add("shake");
@@ -312,7 +303,7 @@ export default {
         .then(res => {
           this.songList = res;
           this.loading = false;
-          this.currentSong._id ? "" : (this.currentSong = this.songList[0]);
+          this.currentSong._id ? "" : this.$store.commit('SET_CURRENT_SONG',this.songList[0]);
           this.scroll.refresh && this.scroll.refresh();
         })
         .catch(err => {
@@ -406,7 +397,7 @@ export default {
   },
   watch: {
     currentSong: function() {
-      this.$emit("postImg", this.currentSong.songImage, this.currentSong.name);
+      // this.$emit("postImg", this.currentSong.songImage, this.currentSong.name);
       this.songLoading = true;
     }
   }

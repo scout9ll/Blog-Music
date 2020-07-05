@@ -1,45 +1,37 @@
 <template>
   <div id="app" :style="appStyle">
      <canvas id="sound-line"></canvas>
-    <music msg="Welcome to Steve911's player" v-on:postImg="changeImage" />
+    <music msg="Welcome to Steve911's player"  />
   </div>
 </template>
 
 <script>
 import music from "./components/music.vue";
-import RainDay from "./visualPlayer/rainDay";
-const rainDay = {};
+// import RainDay from "./visualPlayer/rainDay";
+// const rainDay = {};
 export default {
   name: "app",
   data() {
     return {
       imgUrl: "",
-      appStyle: {}
     };
   },
   components: {
     music
   },
-  methods: {
-    changeImage(imgUrl, imgName) {
-      // console.log(imgName);
+  computed: {
+    currentSong(){
+      return this.$store.state.currentSong
+    },
+    appStyle(){
       const defaultImg = "https://w.wallhaven.cc/full/0j/wallhaven-0jk2gw.jpg";
-      imgUrl = imgUrl || defaultImg;
-      this.imgUrl = imgUrl;
-      this.appStyle = {
+      const imgUrl = this.currentSong.songImage || defaultImg;
+      return  {
         background: `url(${imgUrl}) center no-repeat`
       };
-      setTimeout(() => {
-        if (imgName == "Rain") {
-          rainDay.instance = new RainDay({ image: "app" });
-        } else {
-          if (rainDay.instance && rainDay.instance.canvas) {
-            rainDay.instance.destroy();
-          }
-        }
-      });
     }
-  }
+  },
+
 };
 </script>
 
