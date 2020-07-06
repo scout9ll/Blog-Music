@@ -1,6 +1,6 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
-const { mongoUrl, musicDB } = require('./dbVar')
+const { mongoUrl, musicDB } = require('./db.config')
 const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const state = {
