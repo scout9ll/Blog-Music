@@ -206,8 +206,8 @@
   </div>
 </template>
 <script>
-import {mapState,mapActions,mapMutations} from 'vuex'
-import MusicService from "../api/musicService.js";
+import { mapState, mapActions, mapMutations } from "vuex";
+import * as MusicService from "../api/musicService";
 import HandDrawPlayer from "./player.vue";
 import drawLoading from "../visualPlayer/loadingAnimation";
 import BScroll from "better-scroll";
@@ -249,12 +249,12 @@ export default {
   mounted() {
     drawLoading("song-load");
   },
-  computed:{
-    ...mapState(['currentSong','playState','soundPublisher'])
+  computed: {
+    ...mapState(["currentSong", "playState", "soundPublisher"])
   },
   methods: {
-    ...mapActions(['handlePress']),
-    ...mapMutations(['SET_CURRENT_SONG']),
+    ...mapActions(["handlePress"]),
+    ...mapMutations(["SET_CURRENT_SONG"]),
     autoChange() {
       // console.log("recieve success");
       const currentIndex = this.songList.findIndex(
@@ -265,7 +265,7 @@ export default {
       while (currentIndex == nextRandomIndex && this.songList.length > 1) {
         nextRandomIndex = Math.floor(Math.random() * this.songList.length);
       }
-      this.$store.commit('SET_CURRENT_SONG',this.songList[nextRandomIndex]);
+      this.$store.commit("SET_CURRENT_SONG", this.songList[nextRandomIndex]);
       // this.currentSong = this.songList[nextRandomIndex];
     },
     handleEdit(song) {
@@ -299,11 +299,13 @@ export default {
     },
     getSong() {
       this.loading = true;
-      return MusicService.getMusic()
+      return MusicService.getSongList()
         .then(res => {
           this.songList = res;
           this.loading = false;
-          this.currentSong._id ? "" : this.$store.commit('SET_CURRENT_SONG',this.songList[0]);
+          this.currentSong._id
+            ? ""
+            : this.$store.commit("SET_CURRENT_SONG", this.songList[0]);
           this.scroll.refresh && this.scroll.refresh();
         })
         .catch(err => {
@@ -331,7 +333,7 @@ export default {
     },
     delSong: function(id) {
       this.loading = true;
-      return MusicService.delMusic(id)
+      return MusicService.delSong(id)
         .then(() => {
           this.$toast({ text: "删除成功", mode: "success" });
           this.loading = false;
@@ -348,7 +350,7 @@ export default {
         });
     },
     editSong: function() {
-      return MusicService.updateMusic(this.onEditSong)
+      return MusicService.updateSong(this.onEditSong)
         .then(() => {
           this.$toast({ text: "更新成功", mode: "success" });
           this.loading = false;
@@ -373,7 +375,7 @@ export default {
       // console.log(formData.get("musicFile"));
       formData.append("songImage", this.songImage);
       this.loading = true;
-      MusicService.uploadMusic(formData, uploadEvent => {
+      MusicService.upLoadSong(formData, uploadEvent => {
         console.log(uploadEvent);
       })
         .then(res => {
