@@ -17,6 +17,9 @@ export interface State {
   playState: PlayState;
   soundPublisher?: SoundPublisher;
   pressed: boolean;
+  isAuthenticated: boolean;
+  showEditor: boolean;
+  editingSong: Song;
 }
 
 export const state: State = {
@@ -28,4 +31,12 @@ export const state: State = {
   },
   playState: PlayState.paused,
   pressed: false,
+  isAuthenticated: true,
+  showEditor: false,
+  editingSong: {
+    _id: "",
+    songImage: "",
+    name: "",
+    songUrl: "",
+  },
 };

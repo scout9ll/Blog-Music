@@ -1,7 +1,7 @@
 import { ActionContext } from "vuex";
 import { State, Song, PlayState } from "./state";
 import { MutationTypes } from "./mutations";
-
+import * as musicService from "../api/musicService";
 export default {
   handlePress(
     { state, commit, dispatch }: ActionContext<State, State>,

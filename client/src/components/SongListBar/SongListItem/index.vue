@@ -1,11 +1,11 @@
 <template>
   <!-- v-bind:key="song._id"
   v-for="song in songList"-->
-  <div :class="[`songList-item` ,setID==song._id?'song-in-set':'']">
+  <div :class="[`songList-item` ,isSetting?'song-in-set':'']">
     <div :class="[`song-item-row` ,`song-primary`,currentSong._id==song._id?'song-in-player':'']">
       <span
-        @click="handlePlay(song)"
-        :class="[`song-play-btn`,currentSong._id==song._id&&resume?`onplay`:'pause']"
+        @click="handlePress(song)"
+        :class="[`song-play-btn`,currentSong._id==song._id&&playState?`onplay`:'pause']"
       >
         <svg
           t="1570094903377"
@@ -53,8 +53,7 @@
       </span>
     </div>
 
-    <div class="song-item-row song-set">
-      <span class="songImage">{{song.songImage}}</span>
+    <div class="song-item-row song-set" v-if="isAuthenticated">
       <button
         :class="['paper-btn','song-del-btn',loading?`disable`:'']"
         @click="delSong(song._id)"
@@ -68,19 +67,23 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
+import { getRandomOtherIndex } from "../../../utils/util";
+import * as MusicService from "../../../api/musicService";
 export default {
+  props: ["song"],
   data() {
-    return {};
+    return {
+      isSetting: false,
+      loading: false
+    };
+  },
+  computed: {
+    ...mapState(["currentSong", "playState", "isAuthenticated"])
   },
   methods: {
-    handlePlay(song) {
-      const player = this.$refs.player;
-      player.$refs.guideLine.classList.add("hidden-guide");
-      this.currentSong._id == song._id
-        ? player.startPlay()
-        : (this.currentSong = song);
-    },
+    ...mapMutations(["SET_SHOW_EDITOR", "SET_EDITING_SONG"]),
+    ...mapActions(["handlePress"]),
     delSong(id) {
       this.loading = true;
       return MusicService.delMusic(id)
@@ -98,10 +101,97 @@ export default {
             duration: 5000
           });
         });
+    },
+    handleEdit(song) {
+      this.SET_SHOW_EDITOR(true);
+      this.SET_EDITING_SONG({ ...song });
+    },
+    expandSet() {
+      this.isSetting = !this.isSetting;
     }
   }
 };
 </script>
 
-<style>
+<style  lang='scss' soped>
+.songList-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  height: 18px;
+  // border-bottom: 2px black double;
+  transition: 0.4s all;
+  background: linear-gradient(180deg, transparent, transparent);
+  overflow: hidden;
+  &:hover {
+    box-shadow: seagreen 1px 1px 1px 0px;
+  }
+  &.song-in-set {
+    height: 60px;
+    transition-delay: 0.4s;
+    background: linear-gradient(180deg, #7bc199, #27663317);
+  }
+  .song-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &.song-set {
+      justify-content: flex-end;
+      margin-top: 8px;
+      button {
+        margin: 0 10px;
+      }
+    }
+    path {
+      transition: 1s fill ease;
+    }
+    .pause.song-play-btn {
+      .pause-path {
+        fill: black;
+      }
+      .playing-path {
+        fill: transparent;
+      }
+    }
+    .onplay.song-play-btn {
+      .pause-path {
+        fill: transparent;
+      }
+      .playing-path {
+        fill: green;
+      }
+    }
+    &.song-primary:hover,
+    &.song-in-player {
+      .pause.song-play-btn {
+        .pause-path {
+          fill: green;
+        }
+      }
+      .onplay {
+        .playing-path {
+          fill: red;
+        }
+      }
+      .song-set-btn {
+        display: unset;
+      }
+    }
+    .song-name {
+      flex-grow: 1;
+    }
+    .song-play-btn,
+    .song-set-btn {
+      height: 20px;
+      width: 20px;
+      cursor: pointer;
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .song-set-btn {
+      display: none;
+    }
+  }
+}
 </style>
