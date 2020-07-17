@@ -3,7 +3,11 @@ const path = require("path");
 module.exports = {
   configureWebpack: {
     resolve: {
-      extensions: ['.ts']
+      extensions: ['.ts'],
+      alias:{
+        "@helper": path.resolve(__dirname, "src/helper"),
+        "@api": path.resolve(__dirname, "src/api")
+      }
     },
     module: {
       rules: [
