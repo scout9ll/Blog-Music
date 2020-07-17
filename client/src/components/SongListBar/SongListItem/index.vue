@@ -1,6 +1,4 @@
 <template>
-  <!-- v-bind:key="song._id"
-  v-for="song in songList"-->
   <div :class="[`songList-item` ,isSetting?'song-in-set':'']">
     <div :class="[`song-item-row` ,`song-primary`,currentSong._id==song._id?'song-in-player':'']">
       <span
@@ -68,8 +66,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { getRandomOtherIndex } from "../../../utils/util";
-import * as MusicService from "../../../api/musicService";
+import * as MusicService from "@api/musicService";
 export default {
   props: ["song"],
   data() {
@@ -86,7 +83,7 @@ export default {
     ...mapActions(["handlePress"]),
     delSong(id) {
       this.loading = true;
-      return MusicService.delMusic(id)
+      return MusicService.delSong(id)
         .then(() => {
           this.$toast({ text: "删除成功", mode: "success" });
           this.loading = false;

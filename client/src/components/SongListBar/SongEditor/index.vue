@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import * as MusicService from "../../../api/musicService";
+import * as MusicService from "@api/musicService";
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -92,7 +92,24 @@ export default {
           });
         });
     },
-    handlePreview() {}
+    handlePreview() {
+      // const cover = this.$root.$children[0].imgUrl;
+      // const icon = document.querySelector(".btn-image-preview");
+      // icon.classList.toggle("on-preview");
+      // if (cover == this.onEditSong.songImage) {
+      //   this.$emit(
+      //     `postImg`,
+      //     this.currentSong.songImage,
+      //     this.currentSong.songImage
+      //   );
+      // } else {
+      //   this.$emit(
+      //     `postImg`,
+      //     this.onEditSong.songImage,
+      //     this.onEditSong.songImage
+      //   );
+      // }
+    }
   }
 };
 </script>

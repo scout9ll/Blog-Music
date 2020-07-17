@@ -1,5 +1,5 @@
 <template>
-  <div class="music" ref="music">
+  <div class="songList__container" ref="music">
     <div :class="['songList',showList?'songList-active':'']">
       <div class="list-content-wrapper" ref="wrapper">
         <div class="list-content content">
@@ -20,74 +20,27 @@
           </label>
         </button>
 
-        <button :class="['paper-btn']" @click="showUpload=true">在线添加</button>
+        <button :class="['paper-btn']" @click="SET_SHOW_UPLOADER(true)">在线添加</button>
       </div>
       <song-editor />
-      <div :class="['upload-form',showUpload?'upload-form-active':'']">
-        <div class="btn-upload-close" @click="showUpload=false">X</div>
-        <div class="upload-form-controls">
-          <label for="musicFile">
-            <div class="upload-btn paper-btn">.</div>
-            <input type="file" id="musicFile" @change="selectSong" ref="ulDom" />
-          </label>
-          <div class="upload-info">
-            <span class="file-name" v-text="songFile.name"></span>
-            <input type="text" v-model="songImage" placeholder="为该歌曲添加图片地址吧" />
-          </div>
-          <button
-            :class="['paper-btn',loading?`disable`:'']"
-            v-on:click="uploadSong"
-          >{{loading?'上传中':'确认上传'}}</button>
-        </div>
-        <!-- ({name:musicName,songUrl:musicUrl}) -->
-        <!-- <button v-on:click="getSong">get</button> -->
-      </div>
+      <song-uploader />
     </div>
-    <HandDrawPlayer
-      v-bind:songLoading.sync="songLoading"
-      :song="currentSong"
-      @song-ended="autoChange"
-      ref="player"
-    >
-      <template v-slot:listButton>
-        <button
-          :class="['btn-list',showList?'btn-list-active':'']"
-          @click="()=>showList=!showList"
-        >MyList</button>
-      </template>
-
-      <template v-slot:state>
-        <transition-group
-          class="action-state"
-          name="action-state"
-          tag="div"
-          style="font-size:.8rem"
-          mode="out-in"
-        >
-          <canvas v-show="songLoading" id="song-load" key="songLoading"></canvas>
-          <div class="loading" v-if="loading" key="loading" style="color:green">loading...</div>
-          <!-- <div class="error" v-if="error.length>1" key="error" style="color:red">{{error}}</div>
-          <div class="message" v-if="message.length>1" key="message">{{message}}</div>-->
-        </transition-group>
-      </template>
-    </HandDrawPlayer>
   </div>
 </template>
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 import BScroll from "better-scroll";
 import * as MusicService from "../../api/musicService";
-import HandDrawPlayer from "../player.vue";
-import drawLoading from "../../visualPlayer/loadingAnimation";
+import drawLoading from "@helper/visualPlayer/loadingAnimation";
 import SongEditor from "./SongEditor";
 import SongListItem from "./SongListItem";
-
+import SongUploader from "./SongUploader"
 export default {
   name: "music",
   components: {
-    HandDrawPlayer,
     SongEditor,
-    SongListItem
+    SongListItem,
+    SongUploader
   },
   data() {
     return {
@@ -97,12 +50,8 @@ export default {
       songImage: "",
       loading: false,
       showList: false,
-      showUpload: false,
       myMv: "",
-      setID: "",
-      songLoading: true,
-      showEdit: false,
-      onEditSong: {}
+      songLoading: true
     };
   },
   created() {
@@ -127,64 +76,15 @@ export default {
   },
   methods: {
     ...mapActions(["handlePress"]),
-    ...mapMutations(["SET_CURRENT_SONG"]),
-    autoChange() {
-      // console.log("recieve success");
-      const currentIndex = this.songList.findIndex(
-        song => song.name == this.currentSong.name
-      );
-      let nextRandomIndex = Math.floor(Math.random() * this.songList.length);
-
-      while (currentIndex == nextRandomIndex && this.songList.length > 1) {
-        nextRandomIndex = Math.floor(Math.random() * this.songList.length);
-      }
-      this.$store.commit("SET_CURRENT_SONG", this.songList[nextRandomIndex]);
-      // this.currentSong = this.songList[nextRandomIndex];
-    },
-
-    handlePreview() {
-      // const cover = this.$root.$children[0].imgUrl;
-      // const icon = document.querySelector(".btn-image-preview");
-      // icon.classList.toggle("on-preview");
-      // if (cover == this.onEditSong.songImage) {
-      //   this.$emit(
-      //     `postImg`,
-      //     this.currentSong.songImage,
-      //     this.currentSong.songImage
-      //   );
-      // } else {
-      //   this.$emit(
-      //     `postImg`,
-      //     this.onEditSong.songImage,
-      //     this.onEditSong.songImage
-      //   );
-      // }
-    },
+    ...mapMutations(["SET_CURRENT_SONG","SET_SHOW_UPLOADER"]),
     shakePlayer() {
       this.$refs.player.$el.classList.add("shake");
       setTimeout(() => this.$refs.player.$el.classList.remove("shake"), 2000);
     },
-    getSong() {
-      this.loading = true;
-      return MusicService.getSongList()
-        .then(res => {
-          this.songList = res;
-          this.loading = false;
-          this.currentSong._id
-            ? ""
-            : this.$store.commit("SET_CURRENT_SONG", this.songList[0]);
-          this.scroll.refresh && this.scroll.refresh();
-        })
-        .catch(err => {
-          this.shakePlayer();
-          this.$toast({ text: "获取歌曲失败", mode: "danger" });
-          this.loading = false;
-        });
-    },
-    selectSong: function() {
+    selectSong() {
       this.songFile = this.$refs.ulDom.files[0];
     },
-    localPlay: function(e) {
+    localPlay(e) {
       let song = e.target.files[0];
       if (!song.type.includes("audio")) {
         return this.$toast({ text: "请上传audio类型文件", mode: "danger" });
@@ -198,7 +98,7 @@ export default {
         this.currentSong.name = song.name;
       };
     },
-    delSong: function(id) {
+    delSong(id) {
       this.loading = true;
       return MusicService.delSong(id)
         .then(() => {
@@ -215,90 +115,19 @@ export default {
             duration: 5000
           });
         });
-    },
-
-    uploadSong: function() {
-      if (!this.songFile.type.includes("audio")) {
-        return this.$toast({ text: "请上传audio类型文件", mode: "danger" });
-      }
-      const formData = new FormData();
-      formData.append("musicFile", this.songFile);
-      // console.log(formData.get("musicFile"));
-      formData.append("songImage", this.songImage);
-      this.loading = true;
-      MusicService.upLoadSong(formData, uploadEvent => {
-        console.log(uploadEvent);
-      })
-        .then(res => {
-          this.$toast({ text: res.data, mode: "success" });
-          this.loading = false;
-          this.songImage = "";
-          this.songFile = "";
-          this.showUpload = false;
-          this.getSong();
-        })
-        .catch(({ response: { data } }) => {
-          this.loading = false;
-          this.shakePlayer();
-          this.$toast({
-            text: "上传失败,   " + data,
-            mode: "danger",
-            duration: 5000
-          });
-        });
     }
   },
   watch: {
-    currentSong: function() {
-      // this.$emit("postImg", this.currentSong.songImage, this.currentSong.name);
-      this.songLoading = true;
+    songList(){
+      this.scroll.refresh && this.scroll.refresh();
     }
   }
 };
 </script>
 
 <style lang='scss'>
-.action-state {
-  position: absolute;
-  width: 120px;
-  height: 50px;
-  left: 180px;
-  bottom: 220px;
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-  }
-}
-.action-state-enter,
-.action-state-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-  position: absolute;
-}
-.action-state-enter-active,
-.action-state-leave-active {
-  position: absolute;
-  transition: all 1s;
-}
-.action-state-move {
-  transition: all 1s;
-}
-.loading {
-  animation: loading 2s steps(3, start) infinite;
-  overflow: hidden;
-}
-@keyframes loading {
-  from {
-    width: 116px;
-  }
-  to {
-    width: 75px;
-  }
-}
-.music {
+
+.songList__container {
   display: flex;
   justify-content: center;
   align-items: center;

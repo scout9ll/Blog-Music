@@ -1,37 +1,41 @@
 <template>
   <div id="app" :style="appStyle">
-     <canvas id="sound-line"></canvas>
-    <music msg="Welcome to Steve911's player"  />
+    <canvas id="sound-line"></canvas>
+    <HandDrawPlayer
+    :song="currentSong"
+    />
+    <SongListBar />
   </div>
 </template>
 
 <script>
-import music from "./components/music.vue";
+import HandDrawPlayer from "./components/HandDrawPlayer";
+import SongListBar from "./components/SongListBar";
 // import RainDay from "./visualPlayer/rainDay";
 // const rainDay = {};
 export default {
   name: "app",
+  components: {
+    HandDrawPlayer,
+    SongListBar
+  },
   data() {
     return {
-      imgUrl: "",
+      imgUrl: ""
     };
   },
-  components: {
-    music
-  },
   computed: {
-    currentSong(){
-      return this.$store.state.currentSong
+    currentSong() {
+      return this.$store.state.currentSong;
     },
-    appStyle(){
+    appStyle() {
       const defaultImg = "https://w.wallhaven.cc/full/0j/wallhaven-0jk2gw.jpg";
       const imgUrl = this.currentSong.songImage || defaultImg;
-      return  {
+      return {
         background: `url(${imgUrl}) center no-repeat`
       };
     }
-  },
-
+  }
 };
 </script>
 
@@ -75,7 +79,7 @@ body {
   width: 100vw;
   height: 100vh;
 }
-#sound-line{
+#sound-line {
   position: absolute;
   left: 0;
   right: 0;

@@ -1,4 +1,4 @@
-import SoundPublisher from "../visualPlayer/soundsPublisher.js";
+import SoundPublisher from "../helper/visualPlayer/soundsPublisher.js";
 
 export interface Song {
   _id: string;
@@ -14,12 +14,15 @@ export enum PlayState {
 
 export interface State {
   currentSong: Song;
+  songList: Song[];
   playState: PlayState;
   soundPublisher?: SoundPublisher;
   pressed: boolean;
   isAuthenticated: boolean;
+  showList: boolean;
   showEditor: boolean;
   editingSong: Song;
+  showUploader: boolean;
 }
 
 export const state: State = {
@@ -29,9 +32,11 @@ export const state: State = {
     name: "",
     songUrl: "",
   },
+  songList: [],
   playState: PlayState.paused,
   pressed: false,
   isAuthenticated: true,
+  showList: false,
   showEditor: false,
   editingSong: {
     _id: "",
@@ -39,4 +44,5 @@ export const state: State = {
     name: "",
     songUrl: "",
   },
+  showUploader: false,
 };

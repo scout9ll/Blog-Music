@@ -30,10 +30,10 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import soundPublisher from "../visualPlayer/soundsPublisher.js";
-import { MusicPlayer, SoundLine } from "../visualPlayer/soundsObservers.js";
+import soundPublisher from "@helper/visualPlayer/soundsPublisher.js";
+import { MusicPlayer, SoundLine } from "@helper/visualPlayer/soundsObservers.js";
 
-import { detectmob } from "../utils/adapter.js";
+import { detectmob } from "@helper/adapter.js";
 export default {
   name: "HandDrawPlayer",
 
