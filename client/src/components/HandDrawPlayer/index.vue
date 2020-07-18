@@ -1,5 +1,5 @@
 <template>
-  <div class="player">
+  <div class="player__container">
     <button @click="handlePress(song)" :class="['btn-play',playState?'btn-play-active':'']"></button>
     <button
       :class="['btn-list',showList?'btn-list-active':'']"
@@ -56,13 +56,15 @@ export default {
       currentTime: "0:00",
       duration: "",
       timePercent: "",
-      songLoading:false
+      songLoading: false,
+      loading: false
     };
   },
   props: {
-    song: Object,
+    song: Object
   },
   mounted() {
+    this.getSong();
     if (detectmob()) {
       this.$toast({
         text: "很遗憾,手机端无法使用audioAPI哦,马上为您跳转到主页",
@@ -127,6 +129,7 @@ export default {
       this.loading = true;
       try {
         await this.getSongList();
+        this.loading = false;
       } catch (e) {
         // this.shakePlayer();
         this.$toast({ text: "获取歌曲失败", mode: "danger" });
@@ -177,7 +180,7 @@ export default {
   left: calc(50% - 119px);
   z-index: 100; */
   left: 75px;
-  bottom: 300px;
+  bottom: calc(300px - 5px);
   height: 20px;
   width: 52px;
   &.btn-list-active {
@@ -210,14 +213,16 @@ input[type="text"]:focus {
     width: 75px;
   }
 }
-.player {
+.player__container {
   position: relative;
+  height: 500px;
+  width: 350px;
 }
 .btn-play {
   position: absolute;
 
   left: 250px;
-  bottom: 300px;
+  bottom: calc(300px - 5px);
   height: 20px;
   width: 24px;
 }

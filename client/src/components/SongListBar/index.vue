@@ -45,34 +45,21 @@ export default {
   data() {
     return {
       scroll: {},
-      songList: [{}],
       songFile: {},
       songImage: "",
       loading: false,
-      showList: false,
       myMv: "",
       songLoading: true
     };
   },
   created() {
-    this.getSong().then(() => {
-      this.$toast({
-        text: "成功获取歌曲~~",
-        mode: "success"
-      });
-      this.$nextTick(() => {
-        this.scroll = new BScroll(this.$refs.wrapper, {
-          scrollY: true,
-          click: true
-        });
-      });
-    });
+
   },
   mounted() {
     drawLoading("song-load");
   },
   computed: {
-    ...mapState(["currentSong", "playState", "soundPublisher"])
+    ...mapState(["currentSong", "playState", "soundPublisher","showList","songList"])
   },
   methods: {
     ...mapActions(["handlePress"]),
@@ -80,9 +67,6 @@ export default {
     shakePlayer() {
       this.$refs.player.$el.classList.add("shake");
       setTimeout(() => this.$refs.player.$el.classList.remove("shake"), 2000);
-    },
-    selectSong() {
-      this.songFile = this.$refs.ulDom.files[0];
     },
     localPlay(e) {
       let song = e.target.files[0];
@@ -131,8 +115,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
 }
 
 .songList {

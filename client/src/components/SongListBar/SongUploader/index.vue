@@ -1,5 +1,5 @@
 <template>
-  <div :class="['upload-form',showUpload?'upload-form-active':'']">
+  <div :class="['upload-form',showUploader?'upload-form-active':'']">
     <div class="btn-upload-close" @click="closeUploader">X</div>
     <div class="upload-form-controls">
       <label for="musicFile">
@@ -22,7 +22,7 @@
 
 <script>
 import * as MusicService from "@api/musicService";
-
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -31,9 +31,15 @@ export default {
       loading: false
     };
   },
+  computed: {
+    ...mapState(["showUploader"])
+  },
   methods: {
     closeUploader() {
       this.$store.commit("SET_SHOW_UPLOADER", false);
+    },
+    selectSong() {
+      this.songFile = this.$refs.ulDom.files[0];
     },
     uploadSong() {
       if (!this.songFile.type.includes("audio")) {

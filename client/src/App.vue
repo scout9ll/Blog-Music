@@ -1,9 +1,7 @@
 <template>
   <div id="app" :style="appStyle">
     <canvas id="sound-line"></canvas>
-    <HandDrawPlayer
-    :song="currentSong"
-    />
+    <HandDrawPlayer :song="currentSong" />
     <SongListBar />
   </div>
 </template>
@@ -74,6 +72,8 @@ body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: grid;
+  place-content: center;
   text-align: center;
   color: #2c3e50;
   width: 100vw;

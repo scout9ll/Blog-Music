@@ -70,12 +70,16 @@ import * as MusicService from "@api/musicService";
 import { mapState, mapMutations } from "vuex";
 
 export default {
+  data() {
+    return { loading: false };
+  },
   computed: {
     ...mapState(["editingSong", "showEditor"])
   },
   methods: {
     ...mapMutations(["SET_SHOW_EDITOR", "SET_EDITING_SONG"]),
     editSong() {
+      this.loading = true;
       return MusicService.updateSong(this.editingSong)
         .then(() => {
           this.$toast({ text: "更新成功", mode: "success" });
