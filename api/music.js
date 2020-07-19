@@ -66,10 +66,11 @@ router.delete("/:id", auth, async (req, res) => {
 
 // edit music
 router.patch("/", auth, async (req, res) => {
-  console.log(req.body);
+  const _id = req.body._id;
+  delete req.body._id;
   state.musicDB
     .collection("music")
-    .updateOne({ _id: getObjectID(req.body._id) }, { $set: { ...req.body } })
+    .updateOne({ _id: getObjectID(_id) }, { $set: { ...req.body } })
     .then((result) => res.status(201).send(result));
 });
 module.exports = router;
