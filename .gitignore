@@ -6,13 +6,14 @@
 # frontend files
 
 /client/node_modules
-#music files
+# music files
 /public/musics
+## /public/project
 
 # local env files
 .env.local
 .env.*.local
-dbVar.js
+db.config.js
 
 # Log files
 npm-debug.log*
