@@ -69,10 +69,7 @@ router.patch("/", auth, async (req, res) => {
   console.log(req.body);
   state.musicDB
     .collection("music")
-    .updateOne(
-      { _id: getObjectID(req.body._id) },
-      { $set: { name: req.body.name, songImage: req.body.songImage } }
-    )
+    .updateOne({ _id: getObjectID(req.body._id) }, { $set: { ...req.body } })
     .then((result) => res.status(201).send(result));
 });
 module.exports = router;
