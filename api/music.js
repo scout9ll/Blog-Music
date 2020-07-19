@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const router = express.Router();
-const auth = require("./middleware/auth");
+const auth = require("../middleware/auth");
 // mongodb connect
 connect((err) => {
   if (err) {
@@ -34,7 +34,7 @@ const upload = multer({
   storage: storage,
 }).single("musicFile");
 
-router.post("/upload", auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       res.send(err);
