@@ -22,7 +22,7 @@
 
 <script>
 import * as MusicService from "@api/musicService";
-import { mapState } from "vuex";
+import { mapState,mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -35,6 +35,7 @@ export default {
     ...mapState(["showUploader"])
   },
   methods: {
+    ...mapActions(["getSongList"]),
     closeUploader() {
       this.$store.commit("SET_SHOW_UPLOADER", false);
     },
@@ -59,7 +60,7 @@ export default {
           this.songImage = "";
           this.songFile = "";
           this.showUpload = false;
-          this.getSong();
+          this.getSongList();
         })
         .catch(({ response: { data } }) => {
           this.loading = false;

@@ -34,7 +34,7 @@ import * as MusicService from "../../api/musicService";
 import drawLoading from "@helper/visualPlayer/loadingAnimation";
 import SongEditor from "./SongEditor";
 import SongListItem from "./SongListItem";
-import SongUploader from "./SongUploader"
+import SongUploader from "./SongUploader";
 export default {
   name: "music",
   components: {
@@ -52,18 +52,26 @@ export default {
       songLoading: true
     };
   },
-  created() {
-
-  },
+  created() {},
   mounted() {
     drawLoading("song-load");
+    this.scroll = new BScroll(this.$refs.wrapper, {
+      scrollY: true,
+      click: true
+    });
   },
   computed: {
-    ...mapState(["currentSong", "playState", "soundPublisher","showList","songList"])
+    ...mapState([
+      "currentSong",
+      "playState",
+      "soundPublisher",
+      "showList",
+      "songList"
+    ])
   },
   methods: {
     ...mapActions(["handlePress"]),
-    ...mapMutations(["SET_CURRENT_SONG","SET_SHOW_UPLOADER"]),
+    ...mapMutations(["SET_CURRENT_SONG", "SET_SHOW_UPLOADER"]),
     shakePlayer() {
       this.$refs.player.$el.classList.add("shake");
       setTimeout(() => this.$refs.player.$el.classList.remove("shake"), 2000);
@@ -102,15 +110,16 @@ export default {
     }
   },
   watch: {
-    songList(){
-      this.scroll.refresh && this.scroll.refresh();
+    songList() {
+      this.$nextTick(() => {
+        this.scroll.refresh && this.scroll.refresh();
+      });
     }
   }
 };
 </script>
 
 <style lang='scss'>
-
 .songList__container {
   display: flex;
   justify-content: center;

@@ -4,7 +4,7 @@ const token = window.localStorage.getItem("token");
 
 
 const axios = Axios.create({
-  baseURL: "api/music",
+  baseURL: "http://www.steve911.fun/api/music/",
 });
 
 axios.interceptors.request.use(

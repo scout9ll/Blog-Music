@@ -17,7 +17,7 @@
     </transition-group>
 
     <audio
-      :src="(song.songUrl.includes('base64')?'':'/')+song.songUrl"
+      :src="song.songUrl"
       ref="audio"
       @timeupdate="onPlay"
       @canplay="loadInfo"
@@ -91,7 +91,8 @@ export default {
       "soundPublisher",
       "pressed",
       "showList",
-      "songList"
+      "songList",
+      'currentSong'
     ])
   },
   methods: {
@@ -114,7 +115,7 @@ export default {
     },
     autoChange() {
       const currentIndex = this.songList.findIndex(
-        song => song.name == this.currentSong.name
+        song => song._id == this.currentSong._id
       );
       const nextRandomIndex = getRandomOtherIndex(
         currentIndex,
