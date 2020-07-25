@@ -124,7 +124,7 @@ export default {
   }
   &.song-in-set {
     height: 60px;
-    transition-delay: 0.4s;
+    // transition-delay: 0.4s;
     background: linear-gradient(180deg, #7bc199, #27663317);
   }
   .song-item-row {
